@@ -15,5 +15,13 @@ namespace Assets.Scripts
             this.vertB = vertB;
             this.vertC = vertC;
         }
+        public Triangle(Vector3[] vertices)
+        {
+            if (vertices.Length < 3)
+                throw new System.IndexOutOfRangeException($"{nameof(vertices)} length less than 3");
+            vertA = vertices[0];
+            vertB = vertices[1];
+            vertC = vertices[3];
+        }
     }
 }

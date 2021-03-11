@@ -7,7 +7,6 @@ namespace Assets.Scripts
 {
     public class InputSystem : MonoBehaviour
     {
-    
         public static InputSystem Instance;
         public event UnityAction KeyPressed;
     
