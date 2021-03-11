@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Assets
+namespace Assets.Scripts
 {
     public class Geometric {
         [Obsolete("This method override is deprecated. Use CalculateSquare(Vector3[]) instead.")]
