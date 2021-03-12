@@ -129,6 +129,24 @@ namespace Assets.Scripts
         {
             return Cos(vector0, vector1) / Sin(vector0, vector1);
         }
+        /// <summary>
+        /// Returns vertex coordinate quarter 
+        /// </summary>
+        /// <param name="planeCenter">coordinate plane center</param>
+        /// <param name="vertex">vertex on coordinate plane</param>
+        public static Quarter FindVectorQuarter(Vector2 planeCenter, Vector2 vertex)
+        {
+            if (planeCenter.x < vertex.x && planeCenter.y < vertex.y)
+                return Quarter.I;
+            if (planeCenter.x > vertex.x && planeCenter.y < vertex.y)
+                return Quarter.II;
+            if (planeCenter.x > vertex.x && planeCenter.y > vertex.y)
+                return Quarter.III;
+            if (planeCenter.x < vertex.x && planeCenter.y > vertex.y)
+                return Quarter.IV;
+
+            throw new ArgumentOutOfRangeException(nameof(vertex), null, nameof(vertex));
+        }
         #endregion
     }
 }
