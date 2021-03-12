@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Vector3 = UnityEngine.Vector3;
 
 namespace Assets.Scripts
 {
@@ -24,11 +26,10 @@ namespace Assets.Scripts
         {
             vertices = new Vector3[]
             {
-                new Vector3(1,0,0),
-                new Vector3(2,0,1),
-                new Vector3(-1,0,2),
-                new Vector3(0,0,1)
-                
+                new Vector3(5,0,0),
+                new Vector3(3,0,2),
+                new Vector3(0,0,0),
+                new Vector3(0,0,4)
             };
 
             triangles = new int[]
@@ -37,7 +38,8 @@ namespace Assets.Scripts
                 2, 3, 0
             };
 
-            SortVectors();
+
+            vertices = SortVectors(vertices);
         }
 
         void UpdateMesh()
@@ -50,31 +52,61 @@ namespace Assets.Scripts
             mesh.RecalculateNormals();
         }
 
-        void SortVectors()
+        private Vector3 GetVectorBetween(Vector3 vector1, Vector3 vector2)
         {
-            var xMin = vertices.Min(v => v.x);
-            var dot1 = vertices.Where(v => v.x.Equals(xMin) && v.z.Equals(vertices.Where(g => g.x.Equals(xMin)).Select(g => g.z).Min())).Select(v => v).First();
-            vertices = vertices.Where(value => value != dot1).ToArray();
+            return vector1 + (vector2 - vector1) / 2;
+        }
 
-            xMin = vertices.Min(v => v.x);
-            var dot2 = vertices.Where(v => v.x.Equals(xMin) && v.z.Equals(vertices.Where(g => g.x.Equals(xMin)).Select(g => g.z).Max())).Select(v => v).First();
-            vertices = vertices.Where(value => value != dot2).ToArray();
+        private Vector3 GetQuadMiddle(Vector3[] quadVertices)
+        {
+            var firstMiddle = GetVectorBetween(quadVertices[0], quadVertices[1]);
+            var secondMiddle = GetVectorBetween(quadVertices[2], quadVertices[3]);
+            return GetVectorBetween(firstMiddle, secondMiddle);
+        }
 
-            var xMax = vertices.Max(v => v.x);
-            var dot3 = vertices.Where(v => v.x.Equals(xMax) && v.z.Equals(vertices.Where(g => g.x.Equals(xMax)).Select(g => g.z).Max())).Select(v => v).First();
-            vertices = vertices.Where(value => value != dot3).ToArray();
-
-            xMax = vertices.Max(v => v.x);
-            var dot4 = vertices.Where(v => v.x.Equals(xMax) && v.z.Equals(vertices.Where(g => g.x.Equals(xMax)).Select(g => g.z).Min())).Select(v => v).First();
-            vertices = vertices.Where(value => value != dot4).ToArray();
-
-            vertices = new Vector3[]
+        private float GetVectorAngle(Vector3 middleVector, Vector3 destinationVector)
+        {
+            var firstVector = Square.GetVector(middleVector, destinationVector);
+            var projectVector = Square.GetVector(middleVector, new Vector3(middleVector.x + 2,0,middleVector.z));
+            var cos = Square.Cos(firstVector, projectVector);
+            var arcCos = Mathf.Acos(cos);
+            var degree = arcCos * 180 / Mathf.PI;
+            var vectorQuarter = Square.FindVectorQuarter(new UnityEngine.Vector2(middleVector.x, middleVector.z),
+                new UnityEngine.Vector2(destinationVector.x, destinationVector.z));
+            if (vectorQuarter == Quarter.I || vectorQuarter == Quarter.II)
             {
-                dot1,
-                dot2,
-                dot3,
-                dot4
-            };
+                degree = 360 - degree;
+            }
+
+            return degree;
+        }
+
+        private Dictionary<Vector3, float> GetVectorsAndAnglesDict(Vector3[] vectors, Vector3 middleVector)
+        {
+            Dictionary<Vector3, float> dict = new Dictionary<Vector3, float>();
+
+            foreach (var vector in vectors)
+            {
+                dict.Add(vector, GetVectorAngle(middleVector, vector));
+            }
+
+            return dict;
+        }
+
+        private Vector3[] SortVectors(Vector3[] vectors)
+        {
+            Vector3[] sortedVectors = new Vector3[4];
+            var middleVector = GetQuadMiddle(vectors);
+            var dict = GetVectorsAndAnglesDict(vectors, middleVector);
+            for(var i = 0; i < sortedVectors.Length; i++)
+            {
+                var minValue = dict.Min(d => d.Value);
+                var vector = dict.Where(v => v.Value.Equals(minValue)).Select(d => d.Key).First();
+                sortedVectors[i] = vector;
+                dict.Remove(vector);
+            }
+
+            return sortedVectors;
         }
     }
 }
