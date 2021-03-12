@@ -3,25 +3,37 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    /// <summary>
+    /// Representations of a triangle in three-dimensional space in the form of a plane
+    /// </summary>
     public struct Triangle
     {
-        public Vector3 vertA;
-        public Vector3 vertB;
-        public Vector3 vertC;
+        /// <summary>
+        /// Vertex A of triangle
+        /// </summary>
+        public Vector3 VertA;
+        /// <summary>
+        /// Vertex B of triangle
+        /// </summary>
+        public Vector3 VertB;
+        /// <summary>
+        /// Vertex C of triangle
+        /// </summary>
+        public Vector3 VertC;
 
         public Triangle(Vector3 vertA, Vector3 vertB, Vector3 vertC)
         {
-            this.vertA = vertA;
-            this.vertB = vertB;
-            this.vertC = vertC;
+            VertA = vertA;
+            VertB = vertB;
+            VertC = vertC;
         }
         public Triangle(Vector3[] vertices)
         {
             if (vertices.Length < 3)
                 throw new System.IndexOutOfRangeException($"{nameof(vertices)} length less than 3");
-            vertA = vertices[0];
-            vertB = vertices[1];
-            vertC = vertices[3];
+            VertA = vertices[0];
+            VertB = vertices[1];
+            VertC = vertices[3];
         }
     }
 }
