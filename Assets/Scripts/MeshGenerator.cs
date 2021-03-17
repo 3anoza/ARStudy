@@ -17,6 +17,11 @@ namespace Assets.Scripts
         {
             mesh = new Mesh();
             GetComponent<MeshFilter>().mesh = mesh;
+        }
+
+        public void GenerateMesh(Vector3[] inputVertices)
+        {
+            vertices = inputVertices;
 
             CreateShape();
             UpdateMesh();
@@ -24,20 +29,11 @@ namespace Assets.Scripts
 
         void CreateShape()
         {
-            vertices = new Vector3[]
-            {
-                new Vector3(5,0,0),
-                new Vector3(3,0,2),
-                new Vector3(0,0,0),
-                new Vector3(0,0,4)
-            };
-
             triangles = new int[]
             {
                 0, 1, 2,
                 2, 3, 0
             };
-
 
             vertices = SortVectors(vertices);
         }
