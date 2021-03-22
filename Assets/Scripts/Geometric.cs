@@ -11,6 +11,7 @@ namespace Assets.Scripts
     /// </summary>
     public struct Geometric
     {
+        private const float ZERO_SQUARE = 0f;
         /// <summary>
         /// Calculate figure square by vertices
         /// <br>Returns square</br>
@@ -18,6 +19,11 @@ namespace Assets.Scripts
         /// <param name="points">figure vertices in 3D</param>
         public static float GetSquare(Vector3[] points)
         {
+            if (points.Length < 3)
+                return GetVectorLength(GetVector(points[0], points[1]));
+            if (points.Length < 2)
+                return ZERO_SQUARE;
+
             var triangles = TriangulateConvex(points);
             return triangles.Sum(GetTriangleSquare);
         }
