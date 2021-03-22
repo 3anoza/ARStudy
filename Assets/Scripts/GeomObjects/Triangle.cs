@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets.Scripts
+namespace Assets.Scripts.GeomObjects
 {
     /// <summary>
     /// Representations of a triangle in three-dimensional space in the form of a plane

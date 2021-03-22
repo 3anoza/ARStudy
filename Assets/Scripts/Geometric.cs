@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GeomObjects;
 using UnityEngine;
 
 namespace Assets.Scripts
@@ -8,7 +9,7 @@ namespace Assets.Scripts
     /// <summary>
     /// A collection of common geometric functions
     /// </summary>
-    public struct Square
+    public struct Geometric
     {
         /// <summary>
         /// Calculate figure square by vertices
@@ -74,6 +75,24 @@ namespace Assets.Scripts
                 triangles.Add(new Triangle(sideA, sideB, sideC));
             }
             
+            return triangles;
+        }
+        public static List<Triangle> TriangulateConvex(Vector2[] points)
+        {
+            if (points.Length < 3)
+                throw new ArgumentException("argument length less than 3", nameof(points));
+
+            List<Triangle> triangles = new List<Triangle>();
+
+            for (int i = 2; i < points.Length; i++)
+            {
+                Vector2 sideA = points[0];
+                Vector2 sideB = points[i - 1];
+                Vector2 sideC = points[i];
+
+                triangles.Add(new Triangle(sideA, sideB, sideC));
+            }
+
             return triangles;
         }
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Assets.Scripts.GUI;
 using UnityEngine;
 using Vector3 = UnityEngine.Vector3;
 
@@ -46,6 +47,7 @@ namespace Assets.Scripts
             mesh.triangles = triangles;
 
             mesh.RecalculateNormals();
+            SquareDisplay.Instance.UpdateSquare(vertices);
         }
 
         private Vector3 GetVectorBetween(Vector3 vector1, Vector3 vector2)
@@ -62,12 +64,12 @@ namespace Assets.Scripts
 
         private float GetVectorAngle(Vector3 middleVector, Vector3 destinationVector)
         {
-            var firstVector = Square.GetVector(middleVector, destinationVector);
-            var projectVector = Square.GetVector(middleVector, new Vector3(middleVector.x + 2,0,middleVector.z));
-            var cos = Square.Cos(firstVector, projectVector);
+            var firstVector = Geometric.GetVector(middleVector, destinationVector);
+            var projectVector = Geometric.GetVector(middleVector, new Vector3(middleVector.x + 2,0,middleVector.z));
+            var cos = Geometric.Cos(firstVector, projectVector);
             var arcCos = Mathf.Acos(cos);
             var degree = arcCos * 180 / Mathf.PI;
-            var vectorQuarter = Square.FindVectorQuarter(new UnityEngine.Vector2(middleVector.x, middleVector.z),
+            var vectorQuarter = Geometric.FindVectorQuarter(new UnityEngine.Vector2(middleVector.x, middleVector.z),
                 new UnityEngine.Vector2(destinationVector.x, destinationVector.z));
             if (vectorQuarter == Quarter.I || vectorQuarter == Quarter.II)
             {
