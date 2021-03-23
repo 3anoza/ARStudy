@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Linq;
+using Unity.Collections;
+using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
 namespace Assets.Scripts
@@ -8,15 +11,20 @@ namespace Assets.Scripts
         public ARCameraManager CameraManager;
         void Start()
         {
-            var settings = CameraManager.currentConfiguration;
-            var framerate = settings.Value.framerate;
-            var res = settings.Value.resolution;
+            StartCoroutine(SetConfig());
 
         }
 
         void Update()
         {
             
+        }
+
+        private IEnumerator SetConfig()
+        {
+            yield return new WaitForSeconds(1);
+            var conf = CameraManager.GetConfigurations(Allocator.Persistent);
+            CameraManager.currentConfiguration = conf[2];
         }
     }
 }
